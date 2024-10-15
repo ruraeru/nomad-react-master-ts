@@ -1,8 +1,9 @@
 const BASE_URL = "https://api.coingecko.com/api/v3/coins";
 const NICO_URL = "https://ohlcv-api.nomadcoders.workers.dev";
-const API_KEY = "CG-GjGuSZZu4WAb7nVYZcGsetEf";
+const API_KEY = process.env.REACT_APP_GEKO_API;
 
 export async function fetchCoins() {
+  console.log(API_KEY);
   return fetch(`${BASE_URL}/markets?vs_currency=usd&${API_KEY}`).then(res =>
     res.json()
   );
