@@ -31,9 +31,6 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
-body {
-	line-height: 1;
-}
 ol, ul {
 	list-style: none;
 }
@@ -55,7 +52,8 @@ table {
 body {
   font-family: "Source Code Pro", sans-serif;
   background-color: ${props => props.theme.bgColor};
-  color: ${props => props.theme.textColor}
+  color: black;
+  line-height: 1;
 }
 a {
   text-decoration: none;
