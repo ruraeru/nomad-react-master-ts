@@ -1,48 +1,18 @@
 import { atom, selector } from "recoil";
 
-const localStorageEffect = (key: string) => ({ setSelf, onSet }: any) => {
-    const savedValue = localStorage.getItem(key)
-    if (savedValue != null) {
-        setSelf(JSON.parse(savedValue));
-    }
+export const minutsState = atom({
+    key: "minutes",
+    default: 0
+})
 
-    onSet((newValue: any, isReset: any) => {
-        isReset
-            ? localStorage.removeItem(key)
-            : localStorage.setItem(key, JSON.stringify(newValue))
-    });
-};
-
-export enum Categories {
-    "TO_DO" = "TO_DO",
-    "DOING" = "DOING",
-    "DONE" = "DONE"
-}
-
-export interface IToDo {
-    text: string;
-    id: number;
-    category: Categories;
-}
-
-export const categoryState = atom<Categories>({
-    key: "category",
-    default: Categories.TO_DO
-});
-
-export const toDoState = atom<IToDo[]>({
-    key: "toDo",
-    default: [],
-    effects: [
-        localStorageEffect("toDo")
-    ]
-});
-
-export const toDoSelector = selector({
-    key: "toDoSelector",
+export const hourSelctor = selector({
+    key: "hours",
     get: ({ get }) => {
-        const toDos = get(toDoState);
-        const category = get(categoryState);
-        return toDos.filter((toDo) => toDo.category === category);
+        const minutes = get(minutsState);
+        return minutes / 60;
+    },
+    set: ({ set }, newValue) => {
+        const minutes = Number(newValue) * 60;
+        set(minutsState, minutes);
     }
 })
