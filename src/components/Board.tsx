@@ -3,16 +3,19 @@ import DragabbleCard from "./DragabbleCard";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-	padding: 20px 10px;
-	padding-top: 30px;
-	background-color: ${props => props.theme.boardColor};
-	border-radius: 5px;
-	min-height: 200px;
+    width: 300px;
+    padding: 20px 10px;
+    padding-top: 10px;
+    background-color: ${(props) => props.theme.boardColor};
+    border-radius: 5px;
+    min-height: 300px;
 `;
 
 const Title = styled.div`
     text-align: center;
     font-weight: 800;
+    margin-bottom: 10px;
+    font-size: 18px;
     text-transform: uppercase;
 `;
 
@@ -27,13 +30,13 @@ function Board({ toDos, boardId }: IBaordProps) {
             <Title>{boardId}</Title>
             <Droppable droppableId={boardId}>
                 {(magic) =>
-                    <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
+                    <div ref={magic.innerRef} {...magic.droppableProps}>
                         {toDos.map((toDo, index) =>
                             //Draggable의 Key랑 draggableId는 같아야한다!
                             <DragabbleCard key={toDo} index={index} toDo={toDo} />
                         )}
                         {magic.placeholder}
-                    </Wrapper>
+                    </div>
                 }
             </Droppable>
         </Wrapper>
