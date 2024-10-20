@@ -30,7 +30,7 @@ function Board({ toDos, boardId }: IBaordProps) {
             <Title>{boardId}</Title>
             <Droppable droppableId={boardId}>
                 {(magic) =>
-                    <div ref={magic.innerRef} {...magic.droppableProps}>
+                    <div style={{ backgroundColor: "red" }} ref={magic.innerRef} {...magic.droppableProps}>
                         {toDos.map((toDo, index) =>
                             //Draggable의 Key랑 draggableId는 같아야한다!
                             <DragabbleCard key={toDo} index={index} toDo={toDo} />
