@@ -1,15 +1,20 @@
 import { atom, selector } from "recoil";
 
+export interface ITodo {
+    id: number;
+    text: string;
+}
+
 //추후 Board 추가를 위한 interface
-interface IToDoState {
-    [key: string]: string[];
+export interface IToDoState {
+    [key: string]: ITodo[];
 }
 
 export const toDoState = atom<IToDoState>({
     key: "toDo",
     default: {
-        "To Do": ["a", "b"],
-        Doing: ["c", "d", "e"],
-        Done: ["f"],
+        "To Do": [],
+        Doing: [],
+        Done: [],
     }
-})
+});

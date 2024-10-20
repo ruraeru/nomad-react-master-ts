@@ -1,7 +1,7 @@
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { toDoState } from "./atoms";
+import { IToDoState, toDoState } from "./atoms";
 import Board from "./components/Board";
 
 const Wrapper = styled.div`
@@ -22,20 +22,37 @@ const Boards = styled.div`
 	gap: 10px;
 `;
 
-
-
 function App() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
+	/*
+	대단하다..
+	const onDragEnd2 = ({ draggableId, destination, source }: DropResult) => {
+		if (!destination) return;
+		setToDos((allBoards) => {
+			const copyToDos: IToDoState = {};
+			Object.keys(allBoards).forEach((toDosKey) => {
+				copyToDos[toDosKey] = [...allBoards[toDosKey]];
+			});
+			copyToDos[source.droppableId].splice(source.index, 1);
+			copyToDos[destination.droppableId].splice(
+				destination.index,
+				0,
+				draggableId
+			);
+			return copyToDos;
+		});
+	};
+	*/
 	const onDragEnd = (info: DropResult) => {
-		console.log(info)
 		const { destination, draggableId, source } = info;
 		if (!destination) return;
 		if (destination.droppableId === source.droppableId) {
 			//same board movement;
 			setToDos((allBoards) => {
 				const boardCopy = [...allBoards[source.droppableId]];
+				const taskObj = boardCopy[source.index];
 				boardCopy.splice(source.index, 1);
-				boardCopy.splice(destination?.index, 0, draggableId);
+				boardCopy.splice(destination?.index, 0, taskObj);
 				return {
 					...allBoards,
 					[source.droppableId]: boardCopy
@@ -46,10 +63,11 @@ function App() {
 			//cross board movement;
 			setToDos((allBoards) => {
 				const sourceBoardCopy = [...allBoards[source.droppableId]];
+				const taskObj = sourceBoardCopy[source.index];
 				const destinationBoard = [...allBoards[destination.droppableId]];
 
 				sourceBoardCopy.splice(source.index, 1);
-				destinationBoard.splice(destination.index, 0, draggableId);
+				destinationBoard.splice(destination.index, 0, taskObj);
 
 				return {
 					...allBoards,

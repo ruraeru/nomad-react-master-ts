@@ -1,0 +1,7 @@
+{
+  "prettier.singleAttributePerLine": true,
+  "prettier.singleQuote": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+  "workbench.settings.useSplitJSON": false
+}
