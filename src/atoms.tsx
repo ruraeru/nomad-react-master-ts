@@ -1,4 +1,18 @@
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
+
+const localStoageEffet = (key: string) => ({ setSelf, onSet }: any) => {
+    console.log(key, setSelf, onSet)
+    const savedValue = localStorage.getItem(key);
+    if (savedValue != null) {
+        setSelf(JSON.parse(savedValue));
+    }
+
+    onSet((newValue: string[], _: any, isReset: boolean) => {
+        isReset
+            ? localStorage.removeItem(key)
+            : localStorage.setItem(key, JSON.stringify(newValue));
+    });
+};
 
 export interface ITodo {
     id: number;
@@ -16,5 +30,9 @@ export const toDoState = atom<IToDoState>({
         "To Do": [],
         Doing: [],
         Done: [],
-    }
+    },
+    effects: [
+        localStoageEffet("Taks")
+    ]
 });
+
