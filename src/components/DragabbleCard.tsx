@@ -1,6 +1,6 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd"
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "../atoms";
 
@@ -24,7 +24,7 @@ interface IDragabbleCardProps {
 }
 
 function DragabbleCard({ toDoId, toDoText, index, boardId }: IDragabbleCardProps) {
-    const [toDos, setTodos] = useRecoilState(toDoState);
+    const setTodos = useSetRecoilState(toDoState);
     const onDeleteTask = () => {
         setTodos(allBoards => {
             const modifyBoard = [...allBoards[boardId]];
