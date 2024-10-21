@@ -95,6 +95,7 @@ function Board({ toDos, boardId }: IBaordProps) {
                                 index={index}
                                 toDoId={toDo.id}
                                 toDoText={toDo.text}
+                                boardId={boardId}
                             />
                         )}
                         {magic.placeholder}
