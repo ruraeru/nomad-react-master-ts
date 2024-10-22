@@ -1,4 +1,4 @@
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { IToDoState, toDoState } from "./atoms";
@@ -79,6 +79,7 @@ function App() {
 	}
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
+			<input />
 			<Wrapper>
 				<Boards>
 					{Object.keys(toDos).map((boardId) =>

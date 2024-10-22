@@ -13,6 +13,21 @@ const localStoageEffet = (key: string) => ({ setSelf, onSet }: any) => {
     });
 };
 
+export interface IBoard {
+    id: number;
+}
+
+export interface IBoardState {
+    [key: string]: IBoard[];
+}
+
+export const boardState = atom<IBoardState>({
+    key: "boards",
+    default: {
+        "Default": []
+    }
+})
+
 export interface ITodo {
     id: number;
     text: string;

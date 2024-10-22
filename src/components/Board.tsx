@@ -1,4 +1,4 @@
-import { Droppable } from "react-beautiful-dnd";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import DragabbleCard from "./DragabbleCard";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -75,34 +75,43 @@ function Board({ toDos, boardId }: IBaordProps) {
         setValue("toDo", "");
     }
     return (
-        <Wrapper>
-            <Title>{boardId}</Title>
-            <Form onSubmit={handleSubmit(onValid)}>
-                <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`} />
-            </Form>
-            <Droppable droppableId={boardId}>
-                {(magic, info) =>
-                    <Area
-                        isDraggingOver={info.isDraggingOver}
-                        isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-                        ref={magic.innerRef}
-                        {...magic.droppableProps}
-                    >
-                        {toDos.map((toDo, index) =>
-                            //Draggable의 Key랑 draggableId는 같아야한다!
-                            <DragabbleCard
-                                key={toDo.id}
-                                index={index}
-                                toDoId={toDo.id}
-                                toDoText={toDo.text}
-                                boardId={boardId}
-                            />
-                        )}
-                        {magic.placeholder}
-                    </Area>
-                }
-            </Droppable>
-        </Wrapper>
+        <Droppable droppableId="boards">
+            {(provided) =>
+                <Draggable draggableId="boards" index={1} {...provided.droppableProps}>
+                    {(provided) =>
+                        <Wrapper {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                            <Title>{boardId}</Title>
+                            <Form onSubmit={handleSubmit(onValid)}>
+                                <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`} />
+                            </Form>
+                            <Droppable droppableId={boardId}>
+                                {(magic, info) =>
+                                    <Area
+                                        isDraggingOver={info.isDraggingOver}
+                                        isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                                        ref={magic.innerRef}
+                                        {...magic.droppableProps}
+                                    >
+                                        {toDos.map((toDo, index) =>
+                                            //Draggable의 Key랑 draggableId는 같아야한다!
+                                            <DragabbleCard
+                                                key={toDo.id}
+                                                index={index}
+                                                toDoId={toDo.id}
+                                                toDoText={toDo.text}
+                                                boardId={boardId}
+                                                info={info}
+                                            />
+                                        )}
+                                        {magic.placeholder}
+                                    </Area>
+                                }
+                            </Droppable>
+                        </Wrapper>
+                    }
+                </Draggable>
+            }
+        </Droppable >
     )
 }
 
