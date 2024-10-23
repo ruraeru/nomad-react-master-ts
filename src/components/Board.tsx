@@ -2,7 +2,7 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import DragabbleCard from "./DragabbleCard";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { ITodo, toDoState } from "../atoms";
+import { ITodo, IToDoState, toDoState } from "../atoms";
 import { useSetRecoilState } from "recoil";
 import React from "react";
 
@@ -63,6 +63,19 @@ interface IForm {
 function Board({ toDos, boardId, index }: IBaordProps) {
     const setToDos = useSetRecoilState(toDoState);
     const { register, setValue, handleSubmit } = useForm<IForm>();
+    const removeBoard = () => {
+        setToDos(allBoards => {
+            const newToDo = Object.keys(allBoards);
+
+            newToDo.splice(index, 1);
+
+            const newObj: IToDoState = {};
+            newToDo.forEach(key => {
+                newObj[key] = allBoards[key];
+            });
+            return newObj;
+        })
+    }
     const onValid = ({ toDo }: IForm) => {
         const newToDo = {
             id: Date.now(),
@@ -77,14 +90,18 @@ function Board({ toDos, boardId, index }: IBaordProps) {
         setValue("toDo", "");
     }
     return (
-        <Draggable key={boardId} draggableId={"board-" + boardId} index={index}>
+        <Draggable key={boardId} draggableId={boardId + ""} index={index}>
             {(magic, snapshot) => (
                 <Wrapper
                     ref={magic.innerRef}
                     {...magic.dragHandleProps}
                     {...magic.draggableProps}
                 >
-                    <Title>{boardId}</Title>
+                    <Header>
+                        <div></div>
+                        <Title>{boardId}</Title>
+                        <button onClick={removeBoard}>X</button>
+                    </Header>
                     <Form onSubmit={handleSubmit(onValid)}>
                         <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`} />
                     </Form>
@@ -116,5 +133,12 @@ function Board({ toDos, boardId, index }: IBaordProps) {
         </Draggable>
     )
 }
+
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+`;
 
 export default Board;

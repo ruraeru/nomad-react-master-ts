@@ -13,26 +13,6 @@ const localStoageEffet = (key: string) => ({ setSelf, onSet }: any) => {
     });
 };
 
-export interface IBoard {
-    id: number;
-}
-
-export interface IBoardState {
-    [key: string]: IBoard[];
-}
-
-export const boardState = atom<IBoardState>({
-    key: "boards",
-    default: {
-        "Default": []
-    }
-})
-
-export const boardDragging = atom<Boolean>({
-    key: "boarddragging",
-    default: false
-})
-
 export interface ITodo {
     id: number;
     text: string;
@@ -45,11 +25,7 @@ export interface IToDoState {
 
 export const toDoState = atom<IToDoState>({
     key: "toDo",
-    default: {
-        "To Do": [],
-        Doing: [],
-        Done: [],
-    },
+    default: {},
     effects: [
         localStoageEffet("Taks")
     ]

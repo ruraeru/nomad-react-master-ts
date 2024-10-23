@@ -1,9 +1,10 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { boardDragging, IToDoState, toDoState } from "./atoms";
+import { IToDoState, toDoState } from "./atoms";
 import Board from "./components/Board";
 import React from "react";
+import AddBoard from "./components/AddBoard";
 
 const Wrapper = styled.div`
 	display: flex;
@@ -25,17 +26,11 @@ const Boards = styled.div`
 
 function App() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
-	const setDragging = useSetRecoilState(boardDragging);
-
 	const onDragEnd = (info: DropResult) => {
 		const { destination, draggableId, source } = info;
 
-
-		// setDragging((prev) => !prev);
-
 		if (!destination) return;
-
-		//baord movement
+		//board movement
 		if (
 			source.droppableId === "board"
 			&& destination.droppableId === "board"
@@ -48,6 +43,7 @@ function App() {
 				newToDo.splice(destination.index, 0, taskObj); //destin index = 2 [todo done doing]
 
 				const newObj: IToDoState = {}; //newObj = {}
+
 				newToDo.forEach((key) => { //key = todo,done, doing
 					newObj[key] = prev[key]; //newObj todo: [12,3,21,3]
 				});
@@ -91,7 +87,7 @@ function App() {
 	}
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<input />
+			<AddBoard />
 			<Droppable droppableId="board" type="active" direction="horizontal">
 				{(magic) => (
 					<Wrapper>
