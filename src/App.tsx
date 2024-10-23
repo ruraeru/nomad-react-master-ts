@@ -1,8 +1,9 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { IToDoState, toDoState } from "./atoms";
+import { boardDragging, IToDoState, toDoState } from "./atoms";
 import Board from "./components/Board";
+import React from "react";
 
 const Wrapper = styled.div`
 	display: flex;
@@ -24,28 +25,39 @@ const Boards = styled.div`
 
 function App() {
 	const [toDos, setToDos] = useRecoilState(toDoState);
-	/*
-	대단하다..
-	const onDragEnd2 = ({ draggableId, destination, source }: DropResult) => {
-		if (!destination) return;
-		setToDos((allBoards) => {
-			const copyToDos: IToDoState = {};
-			Object.keys(allBoards).forEach((toDosKey) => {
-				copyToDos[toDosKey] = [...allBoards[toDosKey]];
-			});
-			copyToDos[source.droppableId].splice(source.index, 1);
-			copyToDos[destination.droppableId].splice(
-				destination.index,
-				0,
-				draggableId
-			);
-			return copyToDos;
-		});
-	};
-	*/
+	const setDragging = useSetRecoilState(boardDragging);
+
 	const onDragEnd = (info: DropResult) => {
 		const { destination, draggableId, source } = info;
+
+
+		// setDragging((prev) => !prev);
+
 		if (!destination) return;
+
+		//baord movement
+		if (
+			source.droppableId === "board"
+			&& destination.droppableId === "board"
+		) {
+			setToDos((prev): IToDoState => {
+				const newToDo = Object.keys(prev); //[todo, doing, done]
+				const taskObj = String(newToDo[source.index]); //doing index = 1
+
+				newToDo.splice(source.index, 1); //newTodo = [todo, done]
+				newToDo.splice(destination.index, 0, taskObj); //destin index = 2 [todo done doing]
+
+				const newObj: IToDoState = {}; //newObj = {}
+				newToDo.forEach((key) => { //key = todo,done, doing
+					newObj[key] = prev[key]; //newObj todo: [12,3,21,3]
+				});
+				return newObj;
+			})
+			return;
+		}
+
+
+
 		if (destination.droppableId === source.droppableId) {
 			//same board movement;
 			setToDos((allBoards) => {
@@ -80,17 +92,23 @@ function App() {
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
 			<input />
-			<Wrapper>
-				<Boards>
-					{Object.keys(toDos).map((boardId) =>
-						<Board
-							boardId={boardId}
-							key={boardId}
-							toDos={toDos[boardId]}
-						/>
-					)}
-				</Boards>
-			</Wrapper>
+			<Droppable droppableId="board" type="active" direction="horizontal">
+				{(magic) => (
+					<Wrapper>
+						<Boards ref={magic.innerRef} {...magic.droppableProps}>
+							{Object.keys(toDos).map((boardId, index) =>
+								<Board
+									boardId={boardId}
+									key={boardId}
+									toDos={toDos[boardId]}
+									index={index}
+								/>
+							)}
+							{magic.placeholder}
+						</Boards>
+					</Wrapper>
+				)}
+			</Droppable>
 		</DragDropContext>
 	)
 }

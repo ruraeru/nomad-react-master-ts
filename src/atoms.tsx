@@ -28,6 +28,11 @@ export const boardState = atom<IBoardState>({
     }
 })
 
+export const boardDragging = atom<Boolean>({
+    key: "boarddragging",
+    default: false
+})
+
 export interface ITodo {
     id: number;
     text: string;

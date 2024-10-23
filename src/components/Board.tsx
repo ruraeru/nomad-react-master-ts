@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { ITodo, toDoState } from "../atoms";
 import { useSetRecoilState } from "recoil";
+import React from "react";
 
 const Wrapper = styled.div`
     width: 300px;
@@ -53,12 +54,13 @@ const Form = styled.form`
 interface IBaordProps {
     toDos: ITodo[],
     boardId: string;
+    index: number;
 }
 
 interface IForm {
     toDo: string;
 }
-function Board({ toDos, boardId }: IBaordProps) {
+function Board({ toDos, boardId, index }: IBaordProps) {
     const setToDos = useSetRecoilState(toDoState);
     const { register, setValue, handleSubmit } = useForm<IForm>();
     const onValid = ({ toDo }: IForm) => {
@@ -75,43 +77,43 @@ function Board({ toDos, boardId }: IBaordProps) {
         setValue("toDo", "");
     }
     return (
-        <Droppable droppableId="boards">
-            {(provided) =>
-                <Draggable draggableId="boards" index={1} {...provided.droppableProps}>
-                    {(provided) =>
-                        <Wrapper {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-                            <Title>{boardId}</Title>
-                            <Form onSubmit={handleSubmit(onValid)}>
-                                <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`} />
-                            </Form>
-                            <Droppable droppableId={boardId}>
-                                {(magic, info) =>
-                                    <Area
-                                        isDraggingOver={info.isDraggingOver}
-                                        isDraggingFromThis={Boolean(info.draggingFromThisWith)}
-                                        ref={magic.innerRef}
-                                        {...magic.droppableProps}
-                                    >
-                                        {toDos.map((toDo, index) =>
-                                            //Draggable의 Key랑 draggableId는 같아야한다!
-                                            <DragabbleCard
-                                                key={toDo.id}
-                                                index={index}
-                                                toDoId={toDo.id}
-                                                toDoText={toDo.text}
-                                                boardId={boardId}
-                                                info={info}
-                                            />
-                                        )}
-                                        {magic.placeholder}
-                                    </Area>
-                                }
-                            </Droppable>
-                        </Wrapper>
-                    }
-                </Draggable>
-            }
-        </Droppable >
+        <Draggable key={boardId} draggableId={"board-" + boardId} index={index}>
+            {(magic, snapshot) => (
+                <Wrapper
+                    ref={magic.innerRef}
+                    {...magic.dragHandleProps}
+                    {...magic.draggableProps}
+                >
+                    <Title>{boardId}</Title>
+                    <Form onSubmit={handleSubmit(onValid)}>
+                        <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`} />
+                    </Form>
+                    <Droppable droppableId={boardId}>
+                        {(magic, info) =>
+                            <Area
+                                isDraggingOver={info.isDraggingOver}
+                                isDraggingFromThis={Boolean(info.draggingFromThisWith)}
+                                ref={magic.innerRef}
+                                {...magic.droppableProps}
+                            >
+                                {toDos.map((toDo, index) =>
+                                    //Draggable의 Key랑 draggableId는 같아야한다!
+                                    <DragabbleCard
+                                        key={toDo.id}
+                                        index={index}
+                                        toDoId={toDo.id}
+                                        toDoText={toDo.text}
+                                        boardId={boardId}
+                                        info={info}
+                                    />
+                                )}
+                                {magic.placeholder}
+                            </Area>
+                        }
+                    </Droppable>
+                </Wrapper>
+            )}
+        </Draggable>
     )
 }
 
