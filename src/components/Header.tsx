@@ -17,7 +17,7 @@ const Nav = styled(motion.nav)`
 
 const Col = styled.div`
     display: flex;
-    align-items: cesnter;
+    align-items: center;
 `;
 
 const Logo = styled(motion.svg)`
