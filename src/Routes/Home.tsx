@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
 const Wrapper = styled.div`
-    background-color: black;
-    /* overflow-x: hidden; */
+    background: black;
+    padding-bottom: 200px;
 `;
 
 const Loader = styled.div`
@@ -56,8 +56,15 @@ const Box = styled(motion.div) <{ $bgPhoto: string }>`
     background-size: cover;
     background-position: center;
     height: 200px;
-    color: red;
+
     font-size: 66px;
+    &:first-child {
+        transform-origin: center left;
+    }
+
+    &:last-child {
+        transform-origin: center right;
+    }
 `;
 
 const rowVariants = {
@@ -69,6 +76,20 @@ const rowVariants = {
     },
     exit: {
         x: -window.outerWidth - 5
+    }
+};
+
+const BoxVariants = {
+    normal: {
+        scale: 1
+    },
+    hover: {
+        scale: 1.3,
+        y: -50,
+        transition: {
+            delay: 0.3,
+            type: "tween"
+        }
     }
 }
 
@@ -110,7 +131,16 @@ export default function Home() {
                             >
                                 {data?.results.slice(1).slice(offset * index, offset * index + offset)
                                     .map((movie) => (
-                                        <Box key={movie.id} $bgPhoto={makeImagePath(movie.backdrop_path || "")} />
+                                        <Box
+                                            variants={BoxVariants}
+                                            initial="normal"
+                                            whileHover="hover"
+                                            key={movie.id}
+                                            transition={{
+                                                type: "tween"
+                                            }}
+                                            $bgPhoto={makeImagePath(movie.backdrop_path || "")}
+                                        />
                                     ))}
                             </Row>
                         </AnimatePresence>
